@@ -78,6 +78,11 @@ app.get('/users/umadis', checkNotAuthenticated, (req, res) => {
   res.render('umadis', { user: req.user.name, role:req.user.role_name});
 });
 
+app.get('/users/registros', checkNotAuthenticated, (req, res) => {
+  console.log(req.user.role_name)
+  res.render('registrosUmadis', { user: req.user.name, role:req.user.role_name});
+});
+
 
 app.get('/users/logout', (req, res) => {
   // req.logout();
@@ -143,7 +148,7 @@ app.post('/users/register', async (req, res) => {
                     throw err;
                   }
                   req.flash('success_msg', 'You are successfully registered');
-                  res.redirect('/users/login');
+                  res.redirect('/users/umadis');
                 }
               );
             }
@@ -166,7 +171,7 @@ app.post(
 
 function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
-    return res.redirect('/users/geoport');
+    return res.redirect('/users/umadis');
   }
   next();
 }
@@ -281,6 +286,62 @@ app.post('/registrar_atencion', async (req, res) => {
 });
 
 
+app.get('/api/personas', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT id, nombre_apellido FROM atencion_persona ORDER BY id');
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al cargar personas' });
+  }
+});
+
+
+
+
+
+app.get('/api/personas/:id', async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const persona = await pool.query(
+      `SELECT p.*, d.nombre AS tipo_discapacidad
+       FROM atencion_persona p
+       LEFT JOIN tipo_discapacidad d ON p.tipo_discapacidad_id = d.id
+       WHERE p.id = $1`,
+      [id]
+    );
+
+    const familiares = await pool.query(
+      `SELECT nombre_apellido, parentesco, edad FROM grupo_familiar WHERE atencion_id = $1`,
+      [id]
+    );
+
+    const acciones = await pool.query(
+      `SELECT descripcion FROM acciones_inmediatas WHERE atencion_id = $1`,
+      [id]
+    );
+
+    const apoyos = await pool.query(
+      `SELECT area, observaciones FROM apoyo_requerido WHERE atencion_id = $1`,
+      [id]
+    );
+
+    res.json({
+      ...persona.rows[0],
+      familiares: familiares.rows,
+      acciones: acciones.rows,
+      apoyos: apoyos.rows
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al obtener detalles' });
+  }
+});
+
+
+
+
 // redirect  
 app.get('/users/21', checkNotAuthenticated, (req, res) => { 
   res.render('21', { user: req.user.name , role:req.user.role_name}); 
@@ -288,81 +349,6 @@ app.get('/users/21', checkNotAuthenticated, (req, res) => {
 app.get('/users/help2', checkNotAuthenticated, (req, res) => { 
   res.render('help2', { user: req.user.name, role:req.user.role_name }); 
 });
-
-app.get('/users/lospinos', checkNotAuthenticated, (req, res) => { 
-  res.render('lospinos', { user: req.user.name, role:req.user.role_name }); 
-});
-
-app.get('/users/geoportpinos', checkNotAuthenticated, (req, res) => { 
-  res.render('geoportpinos', { user: req.user.name, role:req.user.role_name }); 
-});
-
-app.get('/users/mantenimiento', checkNotAuthenticated, (req, res) => { 
-  res.render('mantenimiento', { user: req.user.name, role:req.user.role_name }); 
-});
-
-
-
-//ACCESO A LOS PORTALES POR DISTRITO 
-//para los usurarios root
-
-app.get('/users/geoportD1', checkNotAuthenticated, checkRole('root'), (req, res) => {
-  res.render('distritos/geoportD1', { user: req.user.name, role:req.user.role_name });
-});
-
-app.get('/users/geoportD2', checkNotAuthenticated, checkRole('root'), (req, res) => {
-  res.render('distritos/geoportD2', { user: req.user.name , role:req.user.role_name});
-});
-app.get('/users/geoportD3', checkNotAuthenticated, checkRole('root'), (req, res) => {
-  res.render('distritos/geoportD3', { user: req.user.name, role:req.user.role_name });
-});
-
-app.get('/users/geoportD4', checkNotAuthenticated, checkRole('root'), (req, res) => {
-  res.render('distritos/geoportD4', { user: req.user.name, role:req.user.role_name });
-});
-app.get('/users/geoportD6', checkNotAuthenticated, checkRole('root'), (req, res) => {
-  res.render('distritos/geoportD6', { user: req.user.name, role:req.user.role_name });
-});
-
-app.get('/users/geoportD7', checkNotAuthenticated, checkRole('root'), (req, res) => {
-  res.render('distritos/geoportD7', { user: req.user.name, role:req.user.role_name });
-});
-
-app.get('/users/geoportDLL', checkNotAuthenticated, checkRole('root'), (req, res) => {
-  res.render('distritos/geoportDLL', { user: req.user.name, role:req.user.role_name });
-});
-
-//para los usuarios admin
-app.get('/users/geoportD1', checkNotAuthenticated, checkRole('admin'), (req, res) => {
-  res.render('distritos/geoportD1', { user: req.user.name, role:req.user.role_name });
-});
-
-app.get('/users/geoportD2', checkNotAuthenticated, checkRole('admin'), (req, res) => {
-  res.render('distritos/geoportD2', { user: req.user.name, role:req.user.role_name });
-});
-app.get('/users/geoportD3', checkNotAuthenticated, checkRole('admin'), (req, res) => {
-  res.render('distritos/geoportD3', { user: req.user.name, role:req.user.role_name });
-});
-
-app.get('/users/geoportD4', checkNotAuthenticated, checkRole('admin'), (req, res) => {
-  res.render('distritos/geoportD4', { user: req.user.name, role:req.user.role_name });
-});
-app.get('/users/geoportD6', checkNotAuthenticated, checkRole('admin'), (req, res) => {
-  res.render('distritos/geoportD6', { user: req.user.name, role:req.user.role_name });
-});
-
-app.get('/users/geoportD7', checkNotAuthenticated, checkRole('admin'), (req, res) => {
-  res.render('distritos/geoportD7', { user: req.user.name, role:req.user.role_name });
-});
-
-app.get('/users/geoportDLL', checkNotAuthenticated, checkRole('admin'), (req, res) => {
-  res.render('distritos/geoportLL', { user: req.user.name, role:req.user.role_name });
-});
-
-
-
-
-
 
 
 // Nueva ruta para descargar archivos y registrar la descarga
@@ -404,16 +390,6 @@ app.get('/descargar-archivo', checkNotAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'descargar-archivo.html'));
 });
 
-
-/*app.get('/users/descargados', checkNotAuthenticated, async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM descargas WHERE usuario_id = $1', [req.user.id]);
-    res.render('descargados', { descargas: result.rows });
-  } catch (err) {
-    console.error('Error al obtener las descargas:', err);
-    res.status(500).send('Error al obtener las descargas');
-  }
-});*/
 app.get('/users/descargados', checkNotAuthenticated, async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM descargas WHERE usuario_id = $1', [req.user.id]);
@@ -438,7 +414,7 @@ app.get('/users/descargados', checkNotAuthenticated, async (req, res) => {
 
 let port = process.env.PORT;
 if (port == null || port == '') {
-  port = 5000;
+  port = 4200;
 }
 app.listen(port, function () {
   console.log(`Server has started successfully at ${port}`);

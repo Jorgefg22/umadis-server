@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Listado de Personas</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+  <style>
+    .nav-contenedor {
+        background-color: #1a3e72; /* azul oscuro personalizado */
+      }
+  </style>
+</head>
+<body class="bg-light">
+
+    <div class="d-flex justify-content-between align-items-center nav-contenedor py-3 px-4">
+        <!-- Imagen izquierda -->
+        <img src="/images/logo-sacaba.png" alt="Logo Izquierda" style="height: 50px;">
+        <!-- Menú centrado -->
+        <ul class="nav justify-content-center">
+          
+          <li class="nav-item">
+            <a class="nav-link active text-white" href="/users/umadis">Form</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active text-white" href="/users/registros">Lista Registros</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="/users/register">Crear Usuario</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="#">Otros</a>
+          </li>
+          
+        </ul>
+      
+        <!-- Imagen derecha -->
+        <img src="/images/SIGAMOSADELANTE.png" alt="Logo Derecha" style="height: 50px;">
+      </div>
+    
+      
+      <div class="d-flex justify-content-between align-items-center nav-contenedor py-3 px-4">
+        <label  alt="Logo Izquierda" style="color: white;"><%= user %></label>
+        <label  alt="Logo Derecha" style="color: white;" onclick="window.location.href='/users/logout'" >cerrar sesion</label>
+      </div>
+    
+
+  <div class="container mt-5">
+    <h2 class="mb-4">Personas Registradas</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombre completo</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="personas-table-body">
+        <!-- Aquí se cargarán los registros dinámicamente -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="detalleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detalles del Registro</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body" id="modal-content">
+          <!-- Aquí se cargarán los datos detallados -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Cargar tabla de personas
+    async function cargarPersonas() {
+      const res = await fetch('/api/personas'); // Ruta que devuelve lista básica
+      const personas = await res.json();
+      const tbody = document.getElementById('personas-table-body');
+      tbody.innerHTML = '';
+
+      personas.forEach((p, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${i + 1}</td>
+          <td>${p.nombre_apellido}</td>
+          <td><button class="btn btn-primary btn-sm" onclick="verDetalles(${p.id})">Ver Detalles</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Cargar detalles al modal
+    async function verDetalles(id) {
+      const res = await fetch(`/api/personas/${id}`);
+      const data = await res.json();
+
+      const html = `
+        <h5>Datos Generales</h5>
+        <p><strong>Nombre:</strong> ${data.nombre_apellido}</p>
+        <p><strong>Edad:</strong> ${data.edad}</p>
+        <p><strong>CI:</strong> ${data.ci}</p>
+        <p><strong>Dirección:</strong> ${data.direccion}</p>
+        <p><strong>Ocupación:</strong> ${data.ocupacion}</p>
+        <p><strong>Tipo Discapacidad:</strong> ${data.tipo_discapacidad}</p>
+        <hr>
+        <h5>Grupo Familiar</h5>
+        <ul>
+          ${data.familiares.map(f => `<li>${f.nombre_apellido} - ${f.parentesco} (${f.edad} años)</li>`).join('')}
+        </ul>
+        <hr>
+        <h5>Acciones Inmediatas</h5>
+        <ul>
+          ${data.acciones.map(a => `<li>${a.descripcion}</li>`).join('')}
+        </ul>
+        <hr>
+        <h5>Apoyos Requeridos</h5>
+        <ul>
+          ${data.apoyos.map(a => `<li>${a.area} - ${a.observaciones}</li>`).join('')}
+        </ul>
+      `;
+
+      document.getElementById('modal-content').innerHTML = html;
+      const modal = new bootstrap.Modal(document.getElementById('detalleModal'));
+      modal.show();
+    }
+
+    cargarPersonas();
+  </script>
+</body>
+</html>

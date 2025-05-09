@@ -147,10 +147,13 @@
     <ul class="nav justify-content-center">
       
       <li class="nav-item">
-        <a class="nav-link active text-white" href="#">Lista Registros</a>
+        <a class="nav-link active text-white" href="/users/umadis">Form</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-white" href="#">Crear Usuario</a>
+        <a class="nav-link active text-white" href="/users/registros">Lista Registros</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" href="/users/register">Crear Usuario</a>
       </li>
       <li class="nav-item">
         <a class="nav-link text-white" href="#">Otros</a>
@@ -161,6 +164,14 @@
     <!-- Imagen derecha -->
     <img src="/images/SIGAMOSADELANTE.png" alt="Logo Derecha" style="height: 50px;">
   </div>
+
+  
+  <div class="d-flex justify-content-between align-items-center nav-contenedor py-3 px-4">
+    <label  alt="Logo Izquierda" style="color: white;"><%= user %></label>
+    <label  alt="Logo Derecha" style="color: white;" onclick="window.location.href='/users/logout'" >cerrar sesion</label>
+  </div>
+
+
 	
   <div  class="form-container">
     <form action="/registrar_atencion" method="POST">
