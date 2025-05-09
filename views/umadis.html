@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Atención a Personas con Discapacidad</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+  <style>
+    /*body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }*/
+
+    form {
+      width: 85%;
+      background-color: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      background-color: #1a3e72;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    h4 {
+      background-color: #d1e2f2;
+      color: #1a3e72;
+      padding: 10px;
+      border-left: 5px solid #1a3e72;
+      margin-top: 30px;
+      border-radius: 4px;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .col-50 {
+      flex: 1 1 48%;
+    }
+
+    .col-33 {
+      flex: 1 1 31%;
+    }
+
+    .col-100 {
+      flex: 1 1 100%;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #e8f0fa;
+      color: #1a3e72;
+    }
+
+    .checkbox-group label {
+      display: inline-block;
+      margin-right: 15px;
+      font-weight: normal;
+    }
+
+    button {
+      background-color: #1a3e72;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #14325b;
+    }
+
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .form-container {
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    form {
+      width: 100%;
+      max-width: 1000px; /* para controlar el ancho máximo del formulario */
+      background-color: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .nav-contenedor {
+      background-color: #1a3e72; /* azul oscuro personalizado */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="d-flex justify-content-between align-items-center nav-contenedor py-3 px-4">
+    <!-- Imagen izquierda -->
+    <img src="/images/logo-sacaba.png" alt="Logo Izquierda" style="height: 50px;">
+    <!-- Menú centrado -->
+    <ul class="nav justify-content-center">
+      
+      <li class="nav-item">
+        <a class="nav-link active text-white" href="#">Lista Registros</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" href="#">Crear Usuario</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" href="#">Otros</a>
+      </li>
+      
+    </ul>
+  
+    <!-- Imagen derecha -->
+    <img src="/images/SIGAMOSADELANTE.png" alt="Logo Derecha" style="height: 50px;">
+  </div>
+	
+  <div  class="form-container">
+    <form action="/registrar_atencion" method="POST">
+    <h1>Registro de Atención a Personas con Discapacidad</h1>
+  
+    <h4>A. Datos Generales</h4>
+  
+    <div class="row">
+      <div class="col-50">
+        <label>Nombre y Apellido</label>
+        <input type="text" name="nombre_apellido">
+      </div>
+      <div class="col-50">
+        <label>Edad</label>
+        <input type="number" name="edad">
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-33">
+        <label>Fecha Nacimiento - Día</label>
+        <input type="number" name="nacimiento_dia" min="1" max="31">
+      </div>
+      <div class="col-33">
+        <label>Mes</label>
+        <input type="number" name="nacimiento_mes" min="1" max="12">
+      </div>
+      <div class="col-33">
+        <label>Año</label>
+        <input type="number" name="nacimiento_anio">
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-33">
+        <label>Distrito</label>
+        <input type="text" name="distrito">
+      </div>
+      <div class="col-33">
+        <label>Dirección</label>
+        <input type="text" name="direccion">
+      </div>
+      <div class="col-33">
+        <label>Ocupación</label>
+        <input type="text" name="ocupacion">
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-33">
+        <label>Nº C.I.</label>
+        <input type="text" name="ci">
+      </div>
+      <div class="col-33">
+        <label>Persona de Referencia</label>
+        <input type="text" name="referencia">
+      </div>
+      <div class="col-33">
+        <label>Cel/Teléfono</label>
+        <input type="text" name="telefono">
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-50">
+        <label>¿Tiene carnet de discapacidad?</label>
+        <select name="carnet">
+          <option value="si">Sí</option>
+          <option value="en_tramite">En trámite</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+      <div class="col-50">
+        <label>Tipo de Discapacidad</label>
+        <input type="text" name="tipo_discapacidad">
+      </div>
+    </div>
+  
+    <h4>B. Datos del Grupo Familiar</h4>
+    <table>
+      <tr><th>Nombres y Apellido</th><th>Parentesco</th><th>Edad</th><th>Teléfono</th><th>Observaciones</th></tr>
+      <tr>
+        <td><input type="text" name="familiar1_nombre"></td>
+        <td><input type="text" name="familiar1_parentesco"></td>
+        <td><input type="number" name="familiar1_edad"></td>
+        <td><input type="text" name="familiar1_telefono"></td>
+        <td><input type="text" name="familiar1_obs"></td>
+      </tr>
+      <tr>
+        <td><input type="text" name="familiar2_nombre"></td>
+        <td><input type="text" name="familiar2_parentesco"></td>
+        <td><input type="number" name="familiar2_edad"></td>
+        <td><input type="text" name="familiar2_telefono"></td>
+        <td><input type="text" name="familiar2_obs"></td>
+      </tr>
+      <tr>
+        <td><input type="text" name="familiar3_nombre"></td>
+        <td><input type="text" name="familiar3_parentesco"></td>
+        <td><input type="number" name="familiar3_edad"></td>
+        <td><input type="text" name="familiar3_telefono"></td>
+        <td><input type="text" name="familiar3_obs"></td>
+      </tr>
+    </table>
+  
+    <h4>C. Apoyo que requiere la persona con discapacidad</h4>
+    <div class="checkbox-group">
+      <label><input type="checkbox" name="apoyo[]" value="legal"> Área Legal</label>
+      <label><input type="checkbox" name="apoyo[]" value="psicologica"> Psicológica</label>
+      <label><input type="checkbox" name="apoyo[]" value="social"> Área Social</label>
+      <label><input type="checkbox" name="apoyo[]" value="pedagogica"> Pedagógica</label>
+      <label><input type="checkbox" name="apoyo[]" value="fisioterapia"> Fisioterapia</label>
+      <label><input type="checkbox" name="apoyo[]" value="comunitario"> Promotor Comunitario</label>
+    </div>
+    <label>Otro apoyo que requiere la P.A.C.D.: <input type="text" name="otro_apoyo"></label>
+  
+    <h4>D. Motivo de Consulta</h4>
+    <textarea name="motivo_consulta" rows="4" class="col-100"></textarea>
+  
+    <h4>E. Acciones Realizadas Inmediatas</h4>
+    <textarea name="accion1" rows="2" placeholder="1."></textarea>
+    <textarea name="accion2" rows="2" placeholder="2."></textarea>
+    <textarea name="accion3" rows="2" placeholder="3."></textarea>
+  
+    <br><br>
+    <button type="submit">Enviar</button>
+  </form>
+  </div>
+<
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+</body>
+</html>
